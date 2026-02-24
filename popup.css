@@ -1,0 +1,203 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
+  margin: 0;
+  padding: 0;
+  background: #f9f9f9;
+  color: #333;
+}
+
+.container {
+  width: 380px;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 16px;
+  margin: 0 0 16px 0;
+  color: #222;
+}
+
+h2 {
+  font-size: 14px;
+  margin: 0 0 8px 0;
+  color: #444;
+}
+
+label {
+  display: block;
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.input-section {
+  margin-bottom: 12px;
+}
+
+textarea {
+  width: 100%;
+  height: 100px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 12px;
+  resize: vertical;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #0078d4;
+}
+
+.file-section {
+  margin-bottom: 12px;
+}
+
+input[type="file"] {
+  font-size: 12px;
+}
+
+.settings-section {
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+}
+
+input[type="number"] {
+  width: 80px;
+  padding: 6px 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 13px;
+}
+
+input[type="number"]:focus {
+  outline: none;
+  border-color: #0078d4;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  margin-top: 8px;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 6px;
+}
+
+.button-section {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.btn {
+  flex: 1;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.15s;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-primary {
+  background: #0078d4;
+  color: #fff;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: #006cbd;
+}
+
+.btn-secondary {
+  background: #e0e0e0;
+  color: #333;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background: #d0d0d0;
+}
+
+.progress-section {
+  margin-bottom: 16px;
+}
+
+.progress-bar {
+  height: 8px;
+  background: #e0e0e0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  background: #0078d4;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+}
+
+.results-section {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#results-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.result-item {
+  padding: 8px;
+  margin-bottom: 4px;
+  border-radius: 4px;
+  font-size: 12px;
+  word-break: break-all;
+}
+
+.result-item.success {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+
+.result-item.error {
+  background: #ffebee;
+  color: #c62828;
+}
+
+.result-item .url {
+  display: block;
+  margin-bottom: 2px;
+}
+
+.result-item .filename {
+  font-weight: 500;
+}
+
+.result-item .error-msg {
+  font-style: italic;
+}

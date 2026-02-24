@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "Markdown Downloader",
+  "version": "1.1",
+  "description": "Download web pages as Markdown",
+
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "downloads",
+    "<all_urls>",
+    "contextMenus"
+  ],
+
+  "background": {
+    "scripts": ["background.js"]
+  },
+
+  "content_scripts": [{
+    "matches": ["<all_urls>"],
+    "js": ["lib/turndown.min.js", "lib/Readability.min.js", "content.js"]
+  }],
+
+  "browser_action": {
+    "default_title": "Download as Markdown",
+    "default_popup": "popup.html"
+  }
+}
