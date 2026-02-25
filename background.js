@@ -2,6 +2,7 @@
 const batchState = {
   isRunning: false,
   urls: [],
+  tabIds: [],
   currentIndex: 0,
   settings: {
     delay: 2000,
@@ -32,6 +33,9 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
   switch (message.action) {
     case 'startBatch':
       startBatch(message.urls, message.settings);
+      break;
+    case 'startTabsBatch':
+      startTabsBatch(message.settings);
       break;
     case 'cancelBatch':
       cancelBatch();
@@ -246,4 +250,74 @@ function sendComplete(cancelled) {
   }).catch(() => {
     // Popup might be closed, ignore
   });
+}
+
+async function startTabsBatch(settings) {
+  if (batchState.isRunning) return;
+
+  // Get all tabs in current window
+  let tabs = await browser.tabs.query({ currentWindow: true });
+
+  // Filter out extension pages and optionally pinned tabs
+  tabs = tabs.filter(tab => {
+    if (tab.url.startsWith('about:') || tab.url.startsWith('moz-extension:')) {
+      return false;
+    }
+    if (!settings.includePinned && tab.pinned) {
+      return false;
+    }
+    return true;
+  });
+
+  if (tabs.length === 0) return;
+
+  // Initialize batch state
+  batchState.isRunning = true;
+  batchState.urls = tabs.map(t => t.url);
+  batchState.tabIds = tabs.map(t => t.id);
+  batchState.currentIndex = 0;
+  batchState.settings = settings;
+  batchState.results = [];
+  usedFilenames.clear();
+
+  await processNextTab();
+}
+
+async function processNextTab() {
+  if (!batchState.isRunning || batchState.currentIndex >= batchState.tabIds.length) {
+    return completeBatch();
+  }
+
+  const tabId = batchState.tabIds[batchState.currentIndex];
+  const url = batchState.urls[batchState.currentIndex];
+  sendProgressUpdate();
+
+  try {
+    // Scrape the existing tab (no need to wait for load)
+    const markdown = await scrapeTab(tabId);
+
+    // Close the tab
+    await browser.tabs.remove(tabId);
+
+    // Save markdown
+    const filename = await saveMarkdown(markdown, batchState.settings.autoSave);
+    recordSuccess(url, filename);
+
+  } catch (error) {
+    // Still try to close the tab on error
+    try {
+      await browser.tabs.remove(tabId);
+    } catch (e) {}
+    recordError(url, error);
+  }
+
+  batchState.currentIndex++;
+
+  // Continue immediately (no delay needed - tabs already loaded)
+  if (batchState.isRunning && batchState.currentIndex < batchState.tabIds.length) {
+    // Small delay to prevent UI freezing
+    setTimeout(processNextTab, 100);
+  } else {
+    completeBatch();
+  }
 }

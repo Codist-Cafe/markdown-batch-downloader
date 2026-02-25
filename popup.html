@@ -9,6 +9,16 @@
   <div class="container">
     <h1>Batch URL Scraper</h1>
 
+    <div class="tabs-section">
+      <button id="download-tabs-btn" class="btn btn-secondary">
+        Download All Tabs (<span id="tab-count">0</span>)
+      </button>
+      <label class="checkbox-label">
+        <input type="checkbox" id="include-pinned">
+        Include pinned tabs
+      </label>
+    </div>
+
     <div class="input-section">
       <label for="urls">Enter URLs (one per line):</label>
       <textarea id="urls" placeholder="https://example.com/page1

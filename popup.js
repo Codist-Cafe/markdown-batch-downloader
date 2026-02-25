@@ -10,6 +10,17 @@ const progressFill = document.getElementById('progress-fill');
 const progressText = document.getElementById('progress-text');
 const resultsSection = document.getElementById('results-section');
 const resultsList = document.getElementById('results-list');
+const downloadTabsBtn = document.getElementById('download-tabs-btn');
+const tabCountSpan = document.getElementById('tab-count');
+const includePinnedCheckbox = document.getElementById('include-pinned');
+
+// Update tab count on popup load
+async function updateTabCount() {
+  const tabs = await browser.tabs.query({ currentWindow: true });
+  tabCountSpan.textContent = tabs.length;
+}
+
+updateTabCount();
 
 // Parse URLs from text
 function parseUrls(text) {
@@ -159,4 +170,29 @@ function setInputsDisabled(disabled) {
   autoSaveCheckbox.disabled = disabled;
   startBtn.disabled = disabled;
   cancelBtn.disabled = !disabled;
+  downloadTabsBtn.disabled = disabled;
+  includePinnedCheckbox.disabled = disabled;
 }
+
+// Download All Tabs button handler
+downloadTabsBtn.addEventListener('click', async () => {
+  const settings = {
+    autoSave: autoSaveCheckbox.checked,
+    includePinned: includePinnedCheckbox.checked
+  };
+
+  // Reset UI
+  resultsList.innerHTML = '';
+  resultsSection.hidden = true;
+  progressSection.hidden = false;
+  progressFill.style.width = '0%';
+  progressText.textContent = 'Starting...';
+
+  // Disable inputs
+  setInputsDisabled(true);
+
+  browser.runtime.sendMessage({
+    action: 'startTabsBatch',
+    settings
+  });
+});
